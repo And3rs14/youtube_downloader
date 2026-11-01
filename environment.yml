@@ -1,0 +1,13 @@
+name: youtube_downloader
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - ffmpeg
+  - deno          # runtime JS que yt-dlp necesita para YouTube
+  - pip
+  - pip:
+      - python-telegram-bot>=21.0
+      - yt-dlp[default]
+      - yt-dlp-ejs  # scripts del challenge solver de YouTube
+      - python-dotenv
