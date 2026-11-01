@@ -24,6 +24,13 @@ if not BOT_TOKEN:
 # conexion lenta puede tardar varios minutos; el timeout general de 30 s no basta.
 MEDIA_UPLOAD_TIMEOUT = 900
 
+# Calidades de audio MP3 (bitrate en kbps)
+AUDIO_QUALITIES = {
+    "audio_low": "128",
+    "audio_mid": "192",
+    "audio_high": "320",
+}
+
 # Carpeta de descargas
 DOWNLOAD_DIR = os.path.join(os.getcwd(), "downloads")
 if not os.path.exists(DOWNLOAD_DIR):
@@ -175,9 +182,25 @@ async def format_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 parse_mode='Markdown'
             )
     else:
-        # Para audio, iniciar descarga directamente
-        user_urls[user_id]['quality'] = 'audio'
-        await start_download(update, context)
+        # Mostrar opciones de calidad para audio
+        keyboard = [
+            [InlineKeyboardButton("🔉 Baja (128 kbps)", callback_data="quality_audio_low")],
+            [InlineKeyboardButton("🔊 Media (192 kbps)", callback_data="quality_audio_mid")],
+            [InlineKeyboardButton("🎧 Alta (320 kbps)", callback_data="quality_audio_high")],
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        try:
+            await query.edit_message_caption(
+                caption="🎵 *Audio MP3 seleccionado*\n\nElige la calidad:",
+                reply_markup=reply_markup,
+                parse_mode='Markdown'
+            )
+        except:
+            await query.edit_message_text(
+                text="🎵 *Audio MP3 seleccionado*\n\nElige la calidad:",
+                reply_markup=reply_markup,
+                parse_mode='Markdown'
+            )
 
 
 async def quality_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -326,7 +349,7 @@ async def start_download(update: Update, context: ContextTypes.DEFAULT_TYPE):
             'postprocessors': [{
                 'key': 'FFmpegExtractAudio',
                 'preferredcodec': 'mp3',
-                'preferredquality': '192'
+                'preferredquality': AUDIO_QUALITIES.get(quality, '192')
             }]
         })
     else:

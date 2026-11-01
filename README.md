@@ -6,7 +6,7 @@ Bot de Telegram que descarga video o audio (MP3) desde YouTube, TikTok, Instagra
 
 1. Envía un enlace al bot.
 2. El bot muestra título, canal, duración y miniatura.
-3. Eliges **Video** (mejor calidad, 1080p, 720p o 480p) o **Audio MP3**.
+3. Eliges **Video** (mejor calidad, 1080p, 720p o 480p) o **Audio MP3** (baja 128 kbps, media 192 kbps o alta 320 kbps).
 4. Verás una barra de progreso durante la descarga y el estado de la subida.
 5. Recibes el archivo en el chat. Límite de Telegram para bots: 50 MB.
 
