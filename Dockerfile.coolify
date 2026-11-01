@@ -38,6 +38,10 @@ ENV PATH="/opt/venv/bin:$PATH"
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+# deno: runtime JavaScript que yt-dlp necesita para resolver los desafios de YouTube.
+# Sin el, todo video de YouTube falla con "This video is not available".
+COPY --from=denoland/deno:bin-2.9.8 /deno /usr/local/bin/deno
+
 COPY --chown=botuser:botgroup telegram_bot.py .
 
 RUN mkdir -p /app/downloads && \

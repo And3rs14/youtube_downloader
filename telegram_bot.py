@@ -5,6 +5,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQu
 import yt_dlp
 import asyncio
 import time
+import shutil
 from telegram.constants import ChatAction
 from telegram.error import TimedOut
 from dotenv import load_dotenv
@@ -19,6 +20,16 @@ logger = logging.getLogger(__name__)
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 if not BOT_TOKEN:
     raise SystemExit("Falta BOT_TOKEN: define el token en el archivo .env")
+
+# yt-dlp necesita un runtime JavaScript (deno) para YouTube. Avisar al arrancar
+# si no esta disponible: sin el, todo video de YouTube falla como "not available".
+if shutil.which("deno"):
+    logger.info(f"deno encontrado en {shutil.which('deno')}")
+else:
+    logger.warning(
+        "deno NO encontrado en PATH: las descargas de YouTube fallaran. "
+        "Instalalo (conda install -c conda-forge deno) o revisa el Dockerfile."
+    )
 
 # Timeout (segundos) para subir archivos a Telegram. Un archivo de 50 MB en una
 # conexion lenta puede tardar varios minutos; el timeout general de 30 s no basta.
